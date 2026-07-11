@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wedding Diary — Plan every event</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="paper-texture"></div>
+
+  <!-- ============ AUTH SCREEN ============ -->
+  <div class="auth-screen" id="authScreen">
+    <div class="auth-card">
+      <div class="brand brand-center">
+        <span class="brand-mark">&#10052;</span>
+        <div class="brand-text">
+          <h1>Wedding Diary</h1>
+          <p class="brand-sub">Every event, kept in order</p>
+        </div>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab is-active" id="tabLogin" data-tab="login">Sign in</button>
+        <button class="auth-tab" id="tabRegister" data-tab="register">Create account</button>
+      </div>
+
+      <p class="auth-error" id="authError" hidden></p>
+
+      <!-- Login form -->
+      <form class="auth-form" id="loginForm">
+        <label class="field-label" for="loginEmail">Email</label>
+        <input class="text-input" type="email" id="loginEmail" autocomplete="email" required />
+        <label class="field-label" for="loginPassword">Password</label>
+        <input class="text-input" type="password" id="loginPassword" autocomplete="current-password" required />
+        <button class="btn btn-primary btn-block" type="submit" id="loginSubmit">Sign in</button>
+      </form>
+
+      <!-- Register form -->
+      <form class="auth-form" id="registerForm" hidden>
+        <label class="field-label" for="registerName">Your name</label>
+        <input class="text-input" type="text" id="registerName" autocomplete="name" required />
+        <label class="field-label" for="registerEmail">Email</label>
+        <input class="text-input" type="email" id="registerEmail" autocomplete="email" required />
+        <label class="field-label" for="registerPassword">Password</label>
+        <input class="text-input" type="password" id="registerPassword" autocomplete="new-password" minlength="6" required />
+        <p class="field-hint">At least 6 characters.</p>
+        <button class="btn btn-primary btn-block" type="submit" id="registerSubmit">Create account</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ APP ============ -->
+  <div id="appScreen" hidden>
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="brand">
+          <span class="brand-mark">&#10052;</span>
+          <div class="brand-text">
+            <h1>Wedding Diary</h1>
+            <p class="brand-sub">Every event, kept in order</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <span class="current-user" id="currentUserName"></span>
+          <button class="btn btn-primary" id="newEventBtn">
+            <span class="btn-plus">+</span> New Event
+          </button>
+          <button class="btn btn-ghost" id="logoutBtn">Sign out</button>
+        </div>
+      </div>
+    </header>
+
+    <p class="board-status" id="boardStatus" hidden></p>
+
+    <main class="board" id="board">
+      <!-- event cards injected here -->
+    </main>
+
+    <p class="empty-state" id="emptyState" hidden>
+      Your diary is blank so far. <button class="link-btn" id="emptyStateBtn">Add your first event</button> to begin.
+    </p>
+  </div>
+
+  <!-- New Event Modal -->
+  <div class="modal-overlay" id="newEventOverlay" hidden>
+    <div class="modal modal-small" role="dialog" aria-labelledby="newEventTitle">
+      <div class="modal-ribbon">New Entry</div>
+      <h2 id="newEventTitle">Name this event</h2>
+      <p class="modal-hint">e.g. Engagement, Mehndi, Ceremony, Reception</p>
+      <input type="text" id="newEventInput" class="text-input" placeholder="Event name" maxlength="60" />
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="cancelNewEvent">Cancel</button>
+        <button class="btn btn-primary" id="confirmNewEvent">Add Event</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Event Detail Modal (Ledger) -->
+  <div class="modal-overlay" id="detailOverlay" hidden>
+    <div class="modal modal-ledger" role="dialog" aria-labelledby="detailTitle">
+      <button class="modal-close" id="closeDetail" aria-label="Close">&times;</button>
+
+      <div class="ledger-head">
+        <span class="modal-ribbon" id="detailKicker">Event</span>
+        <h2 id="detailTitle" class="ledger-title" contenteditable="true" spellcheck="false"></h2>
+      </div>
+
+      <div class="ledger-rows" id="ledgerRows">
+        <!-- field rows injected here -->
+      </div>
+
+      <button class="add-row-btn" id="addFieldBtn">
+        <span class="btn-plus">+</span> Add detail
+      </button>
+
+      <div class="add-row-form" id="addRowForm" hidden>
+        <input type="text" id="newFieldLabel" class="text-input text-input-sm" placeholder="Label (e.g. Florist)" maxlength="40" />
+        <input type="text" id="newFieldValue" class="text-input text-input-sm" placeholder="Detail" maxlength="200" />
+        <button class="btn btn-primary btn-sm" id="saveFieldBtn">Save</button>
+        <button class="btn btn-ghost btn-sm" id="cancelFieldBtn">Cancel</button>
+      </div>
+
+      <div class="ledger-footer">
+        <button class="danger-link" id="deleteEventBtn">Delete this event</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Delete Modal -->
+  <div class="modal-overlay" id="confirmOverlay" hidden>
+    <div class="modal modal-small" role="dialog" aria-labelledby="confirmTitle">
+      <h2 id="confirmTitle">Remove this event?</h2>
+      <p class="modal-hint" id="confirmText">This will permanently delete it from your account.</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="cancelConfirm">Keep it</button>
+        <button class="btn btn-danger" id="confirmDelete">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
